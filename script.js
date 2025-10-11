@@ -7,7 +7,6 @@ Login.addEventListener("click", () => {
   let userExists = false;
     fetch(
         'https://hiscoretracker-67ep.restdb.io/rest/accounts?q={"username":"' + usernameToCheck + '"}', {
-        {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -27,6 +26,7 @@ Login.addEventListener("click", () => {
             } else {
                 alert("User does not exist.");
             }
+        });
 });
 const SignUp = document.getElementById("SignUpButton");
 SignUp.addEventListener("click", () => {
@@ -34,8 +34,7 @@ SignUp.addEventListener("click", () => {
   let signUppassword = prompt("What is your desired password?");
   let userExists = false;
     fetch(
-        'https://hiscoretracker-67ep.restdb.io/rest/accounts?q={"username":"' + usernameToCheck + '"}', {
-        {
+        'https://hiscoretracker-67ep.restdb.io/rest/accounts?q={"username":"' + signUpusername + '"}', {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
