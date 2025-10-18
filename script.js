@@ -6,7 +6,7 @@ Login.addEventListener("click", () => {
   const usernameToCheck = loginusername;
   const apiKey = "68ea8f1c7f34ed3b0c200aaa";
   let userExists = false;
-  const url = `https://hiscoretracker-67ep.restdb.io/rest/accounts?q=${query}`;
+  const url = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`;
     fetch(url, {
             method: 'GET',
             headers: {
@@ -36,7 +36,7 @@ SignUp.addEventListener("click", () => {
   let signUppassword = prompt("What is your desired password?");
   let userExists = false;
     fetch(
-        'https://hiscoretracker-67ep.restdb.io/rest/accounts?q={"username":"' + signUpusername + '"}', {
+        'https://hiscoretracker-67e9.restdb.io/rest/accounts?q={"username":"' + signUpusername + '"}', {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
