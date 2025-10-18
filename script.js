@@ -2,19 +2,19 @@ const Login = document.getElementById("LoginButton");
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
+  const query = encodeURIComponent(`{"username":"${loginusername}","password":"${loginpassword}"}`);
   const usernameToCheck = loginusername;
   const apiKey = "68ea8f1c7f34ed3b0c200aaa";
   let userExists = false;
-    fetch(
-        'https://hiscoretracker-67ep.restdb.io/rest/accounts?q={"username":"' + usernameToCheck + '"}', {
-            method: "GET",
+  const url = `https://hiscoretracker-67ep.restdb.io/rest/accounts?q=${query}`;
+    fetch(url, {
+            method: 'GET',
             headers: {
                 "Content-Type": "application/json",
                 "x-apikey": apiKey,
                 "cache-control": "no-cache",
-            },
-        }
-    )
+            }
+        })
         .then((res) => {
             if (!res.ok) throw new Error("Network response was not ok");
             return res.json();
@@ -23,8 +23,10 @@ Login.addEventListener("click", () => {
             userExists = data.length > 0;
             if (userExists) {
                 alert("user exists");
+                localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('username', username); // Store the username in lowercase in localStorage
             } else {
-                alert("User does not exist.");
+                alert("Incorrect username or password");
             }
         });
 });
