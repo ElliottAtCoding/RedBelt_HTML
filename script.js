@@ -1,10 +1,10 @@
 const Login = document.getElementById("LoginButton");
+const apiKey = "68ea8f1c7f34ed3b0c200aaa";
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
   const query = encodeURIComponent(`{"username":"${loginusername}","password":"${loginpassword}"}`);
   const usernameToCheck = loginusername;
-  const apiKey = "68ea8f1c7f34ed3b0c200aaa";
   let userExists = false;
   const url = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`;
     fetch(url, {
@@ -24,7 +24,7 @@ Login.addEventListener("click", () => {
             if (userExists) {
                 alert("user exists");
                 localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('username', username); // Store the username in lowercase in localStorage
+            localStorage.setItem('username', usernameToCheck); // Store the username in localStorage
             } else {
                 alert("Incorrect username or password");
             }
