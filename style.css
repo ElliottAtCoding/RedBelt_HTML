@@ -1,1 +1,10 @@
-
+.user-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #200;
+    color: fff;
+    font-size: 0.9rem;
+}
