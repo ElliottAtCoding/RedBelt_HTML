@@ -73,8 +73,14 @@ const updateUserBadge = () => {
     userBadge.textContent = "Not logged in";
   }
 };
-const ifLoggedIn = () => {
+const whenLoggedIn = () => {
     signupButton.style.display = "none";
     Login.style.display = "none";
 }
-window.addEventListener("DOMContentLoaded", updateUserBadge);
+document.addEventListener('DOMContentLoaded', () => {
+  updateUserBadge();
+
+  if (localStorage.getItem('isLoggedIn') === 'true') {
+    whenLoggedIn();
+  }
+});
