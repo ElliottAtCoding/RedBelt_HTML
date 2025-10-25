@@ -1,7 +1,7 @@
 const Login = document.getElementById("LoginButton");
 const apiKey = "68ea8f1c7f34ed3b0c200aaa";
 const signupButton = document.getElementById("SignUpButton");
-//TODO// const logoutButton = document.getElementById("logoutButton");
+const logoutButton = document.getElementById("logoutButton");
 
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
@@ -76,6 +76,8 @@ const updateUserBadge = () => {
 const whenLoggedIn = () => {
     signupButton.style.display = "none";
     Login.style.display = "none";
+    logoutButton.style.display = "inline-block";
+
 }
 document.addEventListener('DOMContentLoaded', () => {
   updateUserBadge();

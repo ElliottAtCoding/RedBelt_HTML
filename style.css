@@ -1,10 +1,25 @@
 .user-badge {
     position: absolute;
     top: 16px;
-    right: 16px;
+    right: 100px;
     padding: 6px 12px;
     border-radius: 20px;
     background: #2a47ff;
     color: #ffffff;
     font-size: 1.2rem;
+}
+#logoutButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #ff4b4b;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+#logoutButton:hover {
+    background: #ff1a1a;
 }
