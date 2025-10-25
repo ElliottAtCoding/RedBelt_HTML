@@ -2,7 +2,7 @@ const Login = document.getElementById("LoginButton");
 const apiKey = "68ea8f1c7f34ed3b0c200aaa";
 const signupButton = document.getElementById("SignUpButton");
 const logoutButton = document.getElementById("logoutButton");
-
+const userBadge = document.getElementById('userBadge');
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
@@ -34,8 +34,7 @@ Login.addEventListener("click", () => {
             }
         });
 });
-const SignUp = document.getElementById("SignUpButton");
-SignUp.addEventListener("click", () => {
+signupButton.addEventListener("click", () => {
   let signUpusername = prompt("What is your desired username?");
   let signUppassword = prompt("What is your desired password?");
   let userExists = false;
@@ -56,11 +55,33 @@ SignUp.addEventListener("click", () => {
         .then((data) => {
             userExists = data.length > 0;
             if (userExists) {
-                console.log("User exists:", data);
-                // Here you would typically check the password as well
+                alert("Username already taken. Please choose another one.");
             } else {
-                console.log("User does not exist.");
+                const newUser = {
+                    username: signUpusername,
+                    password: signUppassword,
+                };
+                fetch('https://hiscoretracker-67e9.restdb.io/rest/accounts', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": apiKey,
+                        "cache-control": "no-cache",
+                    },
+                    body: JSON.stringify(newUser),
+                })
+                    .then((res) => {
+                        if (!res.ok) throw new Error("Network response was not ok");
+                        return res.json();
+                    })
+                    .then((data) => {
+                        alert("Account created successfully!");
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('username', signUpusername);
+                        whenLoggedIn();
+                    });
             }
+            
 });
 });
 const updateUserBadge = () => {
@@ -74,6 +95,7 @@ const updateUserBadge = () => {
   }
 };
 const whenLoggedIn = () => {
+    updateUserBadge();
     signupButton.style.display = "none";
     Login.style.display = "none";
     logoutButton.style.display = "inline-block";
