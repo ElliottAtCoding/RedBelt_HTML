@@ -1,5 +1,6 @@
 const Login = document.getElementById("LoginButton");
 const apiKey = "68ea8f1c7f34ed3b0c200aaa";
+const userBadge = document.getElementById("userBadge");
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
@@ -24,7 +25,8 @@ Login.addEventListener("click", () => {
             if (userExists) {
                 alert("user exists");
                 localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('username', usernameToCheck); // Store the username in localStorage
+                localStorage.setItem('username', usernameToCheck);
+                updateUserBadge();
             } else {
                 alert("Incorrect username or password");
             }
@@ -59,3 +61,14 @@ SignUp.addEventListener("click", () => {
             }
 });
 });
+const updateUserBadge = () => {
+  if (!userBadge) return;
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  if (isLoggedIn) {
+    const storedUsername = localStorage.getItem("username");
+    userBadge.textContent = `Logged in as ${storedUsername}`;
+  } else {
+    userBadge.textContent = "Not logged in";
+  }
+};
+window.addEventListener("DOMContentLoaded", updateUserBadge);
