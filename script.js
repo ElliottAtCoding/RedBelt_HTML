@@ -86,3 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
     whenLoggedIn();
   }
 });
+logoutButton.addEventListener("click", () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    alert("You have been logged out.");
+    location.reload();
+    });
