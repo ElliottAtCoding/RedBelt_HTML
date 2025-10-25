@@ -85,6 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('isLoggedIn') === 'true') {
     whenLoggedIn();
   }
+  else{
+    logoutButton.style.display = "none";
+  }
 });
 logoutButton.addEventListener("click", () => {
     localStorage.removeItem("isLoggedIn");
