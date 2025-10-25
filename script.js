@@ -66,7 +66,7 @@ const updateUserBadge = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   if (isLoggedIn) {
     const storedUsername = localStorage.getItem("username");
-    userBadge.textContent = `Logged in as ${storedUsername}`;
+    userBadge.textContent = `${storedUsername}`;
   } else {
     userBadge.textContent = "Not logged in";
   }
