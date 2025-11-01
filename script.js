@@ -8,7 +8,7 @@ const scoreInput = document.getElementById("scoreInput");
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
-  const query = encodeURIComponent(`{"username":"${loginusername}","password":"${loginpassword}"}`);
+  const query = encodeURIComponent(JSON.stringify({ username: loginusername, password: loginpassword }));
   const usernameToCheck = loginusername;
   let userExists = false;
   const url = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`;
@@ -41,8 +41,9 @@ signupButton.addEventListener("click", () => {
   let signUpusername = prompt("What is your desired username?");
   let signUppassword = prompt("What is your desired password?");
   let userExists = false;
+  const query = encodeURIComponent(JSON.stringify({ username: signUpusername }));
     fetch(
-        'https://hiscoretracker-67e9.restdb.io/rest/accounts?q={"username":"' + signUpusername + '"}', {
+        `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -59,38 +60,43 @@ signupButton.addEventListener("click", () => {
             userExists = data.length > 0;
             if (userExists) {
                 alert("Username already taken. Please choose another one.");
+                return;
             } else {
-                const newUser = {
-                    username: signUpusername,
-                    password: signUppassword,
-                    highScore: 0,
-                };
-                fetch('https://hiscoretracker-67e9.restdb.io/rest/accounts', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-apikey": apiKey,
-                        "cache-control": "no-cache",
-                    },
-                    body: JSON.stringify(newUser),
-                })
-                    .then((res) => {
-                        if (!res.ok) throw new Error("Network response was not ok");
-                        return res.json();
-                    })
-                    .then((data) => {
-                        alert("Account created successfully!");
-                        localStorage.setItem('isLoggedIn', 'true');
-                        localStorage.setItem('username', signUpusername);
-                        whenLoggedIn();
-                    })
-                    .catch((error) => {
-                        console.error("Error creating account:", error);
-                        alert("There was an error creating your account. Please try again later.");
-                    });
-            }
-            
-});
+            const newUser = {
+                username: signUpusername,
+                password: signUppassword,
+                highScore: 0,
+            };
+            return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": apiKey,
+                    "cache-control": "no-cache",
+                },
+                body: JSON.stringify(newUser),
+        })
+        .then((res) => {
+            if (!res) return;
+            if (!res.ok) throw new Error("Network response was not ok");
+            return res.json();
+        })
+        .then((data) => {
+            alert("Account created successfully!");
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('username', signUpusername);
+            whenLoggedIn();
+        })
+        .catch((error) => {
+            console.error("Error creating account:", error);
+            alert("There was an error creating your account. Please try again later.");
+        });
+    }
+})
+    .catch((error) => {
+        console.error("Error checking username:", error);
+        alert("There was an error checking the username. Please try again later.");
+    });
 });
 const updateUserBadge = () => {
   if (!userBadge) return;
@@ -135,11 +141,9 @@ submitScoreButton.addEventListener("click", () => {
         alert("Please enter a valid score.");
         return;
     }
-    const newScore = {
-        username: username,
-        score: score,
-    };
-    fetch('https://hiscoretracker-67e9.restdb.io/rest/accounts?q={username":"' + username + '"}', {
+    const query = encodeURIComponent(JSON.stringify({ username }));
+    fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`,
+        {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -156,7 +160,9 @@ submitScoreButton.addEventListener("click", () => {
             throw new Error("User not found");
         }
         const user = data[0];
-        if (score > user.highScore) {
+        const id = user._id;
+        const currentHighScore = typeof user.highScore === "number" ? user.highScore : 0;
+        if (score > currentHighScore) {
             return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts/${id}`, {
                 method: "PATCH",
                 headers: {
@@ -168,18 +174,17 @@ submitScoreButton.addEventListener("click", () => {
             });
         } else {
             alert("Score is not higher than current high score.");
-            throw new Error("Score not high enough");
             scoreInput.value = "";
             return null;
         }
-    })
-    .then((res) => {
+    }).then((res) => {
+        if (!res) return;
         if (!res.ok) throw new Error("Network response was not ok");
         return res.json();
     })
     .then((updated) => {
         if (updated) {
-            alert("Your new high score of ${updated.highscore}` has been set!");
+            alert(`Your new high score of ${updated.highScore} has been set!`);
             scoreInput.value = "";
         }
     })
