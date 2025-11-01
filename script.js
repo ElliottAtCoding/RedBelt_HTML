@@ -118,6 +118,35 @@ document.addEventListener('DOMContentLoaded', () => {
     whenLoggedOut();
   }
 });
+submitScoreButton.addEventListener("click", () => {
+    const score = scoreInput.value;
+    const username = localStorage.getItem("username");
+    if (!username) {
+        alert("You must be logged in to submit a score.");
+        return;
+    }
+    const newScore = {
+        username: username,
+        score: parseInt(score, 10),
+    };
+    fetch('https://hiscoretracker-67e9.restdb.io/rest/accounts', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-apikey": apiKey,
+            "cache-control": "no-cache",
+        },
+        body: JSON.stringify(newScore),
+    })
+    .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+    })
+    .then((data) => {
+        alert("Score submitted successfully!");
+        scoreInput.value = "";
+    });
+});
 logoutButton.addEventListener("click", () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("username");
