@@ -48,7 +48,7 @@
 #submitScoreButton:hover {
     background: #45a049;
 }
-#loginButton, #signupButton {
+#LoginButton, #SignUpButton {
     position: absolute;
     top: 16px;
     right: 16px;
