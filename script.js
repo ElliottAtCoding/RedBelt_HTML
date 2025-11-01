@@ -119,6 +119,8 @@ const whenLoggedOut = () => {
     signupButton.style.display = "inline-block";
     Login.style.display = "inline-block";
     logoutButton.style.display = "none";
+    submitScoreButton.style.display = "none";
+    scoreInput.style.display = "none";
 }
 document.addEventListener('DOMContentLoaded', () => {
   updateUserBadge();

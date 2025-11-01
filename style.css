@@ -23,3 +23,28 @@
 #logoutButton:hover {
     background: #ff1a1a;
 }
+#scoreInput {
+    position: absolute;
+    top: 96px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    width: 120px;
+}
+#submitScoreButton {
+    position: absolute;
+    top: 136px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #4caf50;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+#submitScoreButton:hover {
+    background: #45a049;
+}
