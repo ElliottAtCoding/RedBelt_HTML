@@ -3,6 +3,8 @@ const apiKey = "68ea8f1c7f34ed3b0c200aaa";
 const signupButton = document.getElementById("SignUpButton");
 const logoutButton = document.getElementById("logoutButton");
 const userBadge = document.getElementById('userBadge');
+const submitScoreButton = document.getElementById("submitScoreButton");
+const scoreInput = document.getElementById("scoreInput");
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
@@ -101,6 +103,11 @@ const whenLoggedIn = () => {
     logoutButton.style.display = "inline-block";
 
 }
+const whenLoggedOut = () => {
+    signupButton.style.display = "inline-block";
+    Login.style.display = "inline-block";
+    logoutButton.style.display = "none";
+}
 document.addEventListener('DOMContentLoaded', () => {
   updateUserBadge();
 
@@ -108,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     whenLoggedIn();
   }
   else{
-    logoutButton.style.display = "none";
+    whenLoggedOut();
   }
 });
 logoutButton.addEventListener("click", () => {
