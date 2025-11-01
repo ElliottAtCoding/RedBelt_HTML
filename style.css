@@ -48,3 +48,18 @@
 #submitScoreButton:hover {
     background: #45a049;
 }
+#loginButton, #signupButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #008cba;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+#loginButton:hover, #signupButton:hover {
+    background: #007bb5;
+}
