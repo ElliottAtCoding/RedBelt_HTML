@@ -102,8 +102,7 @@ const updateUserBadge = () => {
   if (!userBadge) return;
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   if (isLoggedIn) {
-    const storedUsername = localStorage.getItem("username");
-    const query = encodeURIComponent(JSON.stringify({ username }));
+    const query = encodeURIComponent(JSON.stringify({ username: storedUsername }));
     fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`,
         {
         method: "GET",
