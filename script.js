@@ -103,7 +103,7 @@ const updateUserBadge = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   if (isLoggedIn) {
     const storedUsername = localStorage.getItem("username");
-    userBadge.textContent = `Hello, ${storedUsername}`;
+    userBadge.textContent = `Hello, ${storedUsername}! Your current high score is ${localStorage.getItem("highScore") || 0}.`;
   } else {
     userBadge.textContent = "Not logged in";
   }
