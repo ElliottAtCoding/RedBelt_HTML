@@ -103,7 +103,30 @@ const updateUserBadge = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   if (isLoggedIn) {
     const storedUsername = localStorage.getItem("username");
-    userBadge.textContent = `Hello, ${storedUsername}! Your current high score is ${localStorage.getItem("highScore") || 0}.`;
+    const query = encodeURIComponent(JSON.stringify({ username }));
+    fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`,
+        {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "x-apikey": apiKey,
+            "cache-control": "no-cache",
+        },
+    })
+    .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+    })
+    .then((data) => {
+        if (data.length === 0) {
+            throw new Error("User not found");
+        }
+        const user = data[0];
+        const id = user._id;
+        const currentHighScore = typeof user.highScore === "number" ? user.highScore : 0;
+        localStorage.setItem("highScore", currentHighScore);
+        userBadge.textContent = `Hello, ${storedUsername}! Your current high score is ${currentHighScore}.`;
+    })
   } else {
     userBadge.textContent = "Not logged in";
   }
