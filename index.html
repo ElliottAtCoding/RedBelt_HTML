@@ -7,13 +7,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="userBadge" class="user-badge" aria-live="polite">Not logged in</div>
-    <h1>Welcome to High Score Tracker</h1>
-    <button id="LoginButton">Login</button>
-    <button id="SignUpButton"> Sign Up</button>
-    <button id="logoutButton"> Logout</button>
-    <textarea id="scoreInput" placeholder="Enter your score here"></textarea>
-    <button id="submitScoreButton">Submit Score</button>
+    <div class="app-shell">
+        <div id="userBadge" class="user-badge" aria-live="polite">Not logged in</div>
+        <main class="card">
+            <h1>Welcome to High Score Tracker</h1>
+            <div class="button-grid">
+                <button id="LoginButton">Login</button>
+                <button id="SignUpButton">Sign Up</button>
+                <button id="logoutButton">Logout</button>
+            </div>
+            <div class="score-card">
+                <textarea id="scoreInput" placeholder="Enter your score here"></textarea>
+                <button id="submitScoreButton">Submit Score</button>
+            </div>
+        </main>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
