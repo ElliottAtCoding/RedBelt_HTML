@@ -1,184 +1,68 @@
-:root {
-    --bg-start: #eef2ff;
-    --bg-end: #dbeafe;
-    --card: #ffffff;
-    --primary: #312e81;
-    --accent: #6366f1;
-    --success: #22c55e;
-    --danger: #ef4444;
-    --text: #0f172a;
-    --muted: #475569;
-    --shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
-}
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background: radial-gradient(circle at top, var(--bg-start), var(--bg-end));
-    color: var(--text);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: clamp(1.5rem, 4vw, 4rem);
-}
-
-.app-shell {
-    width: min(680px, 100%);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.card {
-    background: var(--card);
-    border-radius: 28px;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-}
-
-h1 {
-    margin: 0;
-    font-size: clamp(1.8rem, 4vw, 2.75rem);
-    text-align: center;
-    color: var(--primary);
-}
-
 .user-badge {
-    align-self: center;
-    width: min(680px, 100%);
-    padding: 0.85rem 1.5rem;
-    border-radius: 999px;
-    background: rgba(99, 102, 241, 0.12);
-    color: var(--primary);
-    font-weight: 600;
-    text-align: center;
-    border: 1px solid rgba(99, 102, 241, 0.25);
-}
-
-.button-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.9rem;
-}
-
-button {
-    border: none;
-    border-radius: 999px;
-    padding: 0.85rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #2a47ff;
     color: #ffffff;
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+    font-size: 1.2rem;
 }
-
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-button:focus-visible,
-textarea:focus-visible {
-    outline: 3px solid rgba(99, 102, 241, 0.4);
-    outline-offset: 3px;
-}
-
-button:hover:not(:disabled),
-button:focus-visible:not(:disabled) {
-    transform: translateY(-2px);
-}
-
-#LoginButton {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-#SignUpButton {
-    background: linear-gradient(135deg, #ec4899, #db2777);
-}
-
 #logoutButton {
-    background: linear-gradient(135deg, var(--danger), #dc2626);
-    display: none;
+    position: absolute;  
+    top: 56px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #ff4b4b;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
 }
-
-.score-card {
-    background: rgba(99, 102, 241, 0.08);
-    border-radius: 24px;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+#logoutButton:hover {
+    background: #ff1a1a;
 }
-
 #scoreInput {
-    width: 100%;
-    min-height: 140px;
-    border-radius: 18px;
-    border: 1px solid rgba(15, 23, 42, 0.15);
-    padding: 1rem;
-    font-size: 1rem;
-    font-family: inherit;
-    resize: vertical;
-    box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.08);
+    position: absolute;
+    top: 136px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    width: 120px;
 }
-
-#scoreInput::placeholder {
-    color: var(--muted);
-}
-
 #submitScoreButton {
-    background: linear-gradient(135deg, var(--success), #16a34a);
-    width: 100%;
+    position: absolute;
+    top: 200px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #4caf50;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
 }
-
-@media (min-width: 640px) {
-    .score-card {
-        flex-direction: row;
-        align-items: stretch;
-    }
-
-    #scoreInput {
-        flex: 1;
-        min-height: 160px;
-    }
-
-    #submitScoreButton {
-        width: 220px;
-        align-self: center;
-    }
+#submitScoreButton:hover {
+    background: #45a049;
 }
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background: radial-gradient(circle at top, #0f172a, #020617);
-        color: #e2e8f0;
-    }
-
-    .card {
-        background: #0f172a;
-        box-shadow: 0 25px 60px rgba(2, 6, 23, 0.6);
-    }
-
-    .user-badge {
-        background: rgba(99, 102, 241, 0.25);
-        color: #e0e7ff;
-        border-color: rgba(99, 102, 241, 0.35);
-    }
-
-    #scoreInput {
-        background: rgba(15, 23, 42, 0.75);
-        color: #f8fafc;
-        border-color: rgba(248, 250, 252, 0.08);
-    }
+#LoginButton, #SignUpButton {
+    position: absolute;
+    top: 56px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #008cba;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+#SignUpButton {
+    top: 96px;
+}
+#LoginButton:hover, #SignUpButton:hover {
+    background: #007bb5;
 }
