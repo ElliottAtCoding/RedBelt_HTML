@@ -1,292 +1,68 @@
-:root {
-    --color-bg: #050914;
-    --color-surface: rgba(10, 20, 45, 0.78);
-    --color-primary: #5865ff;
-    --color-primary-hover: #4a55e0;
-    --color-secondary: rgba(88, 101, 255, 0.24);
-    --color-text: #f7f8ff;
-    --color-muted: #9fa8d6;
-    --color-danger: #ff6b7d;
-    --color-danger-hover: #ff5166;
-    --color-success: #37c68f;
-    --color-success-hover: #2aa673;
-    --shadow-elevated: 0 32px 70px -30px rgba(8, 12, 30, 0.85);
-    --transition: 220ms ease;
-}
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--color-text);
-    background:
-        radial-gradient(140% 140% at 15% 18%, rgba(88, 101, 255, 0.48) 0%, rgba(88, 101, 255, 0) 60%),
-        radial-gradient(150% 150% at 85% 12%, rgba(255, 107, 125, 0.45) 0%, rgba(255, 107, 125, 0) 65%),
-        var(--color-bg);
-    display: grid;
-    grid-auto-rows: max-content;
-    justify-content: center;
-    align-content: start;
-    row-gap: clamp(1.25rem, 3vw, 2.5rem);
-    padding: clamp(32px, 7vw, 96px) clamp(18px, 6vw, 72px) clamp(48px, 9vw, 128px);
-    position: relative;
-    overflow-x: hidden;
-}
-
-body::before {
-    content: "";
+.user-badge {
     position: absolute;
-    top: clamp(24px, 6vw, 80px);
-    bottom: clamp(28px, 8vw, 112px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(calc(100% - clamp(36px, 10vw, 120px)), 640px);
-    background: var(--color-surface);
-    border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: var(--shadow-elevated);
-    backdrop-filter: blur(18px);
-    z-index: 0;
-}
-
-@supports not (backdrop-filter: blur(1px)) {
-    body::before {
-        background: rgba(10, 20, 45, 0.92);
-    }
-}
-
-body > *:not(script) {
-    width: min(100%, 600px);
-    position: relative;
-    z-index: 1;
-}
-
-.user-badge {
-    justify-self: end;
-    padding: 0.45rem 1rem;
-    border-radius: 999px;
-    background: linear-gradient(135deg, rgba(88, 101, 255, 0.72), rgba(120, 134, 255, 0.45));
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 0.01em;
-    color: var(--color-text);
-    backdrop-filter: blur(12px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-}
-
-h1 {
-    margin: 0;
-    justify-self: start;
-    font-size: clamp(2.1rem, 4.8vw, 3rem);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    text-shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
-}
-
-button {
-    justify-self: stretch;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.95rem 1.5rem;
-    border-radius: 999px;
-    border: none;
-    background: linear-gradient(135deg, var(--color-primary), #6c79ff);
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #2a47ff;
     color: #ffffff;
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: 0.01em;
+    font-size: 1.2rem;
+}
+#logoutButton {
+    position: absolute;  
+    top: 56px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #ff4b4b;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
     cursor: pointer;
-    box-shadow: 0 18px 44px -20px rgba(88, 101, 255, 0.85);
-    transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
 }
-
-button:hover,
-button:focus-visible {
-    transform: translateY(-1px);
-    box-shadow: 0 26px 56px -20px rgba(88, 101, 255, 0.85);
+#logoutButton:hover {
+    background: #ff1a1a;
 }
-
-button:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.35);
-    outline-offset: 4px;
-}
-
-button:disabled {
-    cursor: not-allowed;
-    filter: saturate(65%) brightness(0.85);
-}
-
-#SignUpButton {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--color-text);
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    box-shadow: 0 18px 42px -26px rgba(249, 249, 255, 0.65);
-}
-
-#SignUpButton:hover,
-#SignUpButton:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 24px 48px -22px rgba(255, 255, 255, 0.55);
-}
-
-#logoutButton {
-    display: none;
-    background: linear-gradient(135deg, var(--color-danger), #ff4f64);
-    box-shadow: 0 24px 52px -20px rgba(255, 81, 103, 0.78);
-}
-
-#logoutButton:hover,
-#logoutButton:focus-visible {
-    background: linear-gradient(135deg, var(--color-danger-hover), #ff3f57);
-    box-shadow: 0 32px 64px -22px rgba(255, 81, 103, 0.82);
-}
-
 #scoreInput {
-    width: 100%;
-    min-height: 160px;
-    padding: 1rem 1.15rem;
-    border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: linear-gradient(135deg, rgba(12, 21, 45, 0.9), rgba(19, 28, 58, 0.9));
-    color: var(--color-text);
-    font-size: 1rem;
-    line-height: 1.6;
-    resize: vertical;
-    font-family: inherit;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 44px -28px rgba(0, 0, 0, 0.75);
-    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    position: absolute;
+    top: 136px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    width: 120px;
 }
-
-#scoreInput::placeholder {
-    color: var(--color-muted);
-}
-
-#scoreInput:focus {
-    outline: none;
-    border-color: rgba(120, 134, 255, 0.9);
-    box-shadow: 0 20px 48px -24px rgba(88, 101, 255, 0.55);
-    transform: translateY(-1px);
-}
-
 #submitScoreButton {
-    background: linear-gradient(135deg, var(--color-success), #50dca1);
-    box-shadow: 0 24px 56px -20px rgba(55, 198, 143, 0.68);
+    position: absolute;
+    top: 176px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #4caf50;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
 }
-
-#submitScoreButton:hover,
-#submitScoreButton:focus-visible {
-    background: linear-gradient(135deg, var(--color-success-hover), #3ecc8d);
-    box-shadow: 0 32px 64px -22px rgba(55, 198, 143, 0.75);
+#submitScoreButton:hover {
+    background: #45a049;
 }
-
-@media (max-width: 560px) {
-    body::before {
-        width: calc(100% - 32px);
-    }
-
-    button {
-        font-size: 0.98rem;
-    }
-
-    #scoreInput {
-        min-height: 140px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    button,
-    #scoreInput {
-        transition: none;
-    }
-}
-
-/* --- minimal, tidy UI --- */
-body { 
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; 
-}
-
-.user-badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  padding: 6px 12px;
-  border-radius: 9999px;
-  background: #2a47ff;
-  color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-/* Shared button basics */
-#logoutButton,
-#submitScoreButton,
-#LoginButton,
-#SignUpButton {
-  padding: 6px 12px;
-  border-radius: 9999px;
-  border: none;
-  color: #ffffff;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-#logoutButton:active,
-#submitScoreButton:active,
-#LoginButton:active,
-#SignUpButton:active {
-  transform: translateY(1px);
-}
-
-/* Individual buttons (keep your original colors/positions) */
-#logoutButton {
-  position: absolute;
-  top: 56px;
-  right: 16px;
-  background: #ff4b4b;
-}
-#logoutButton:hover { background: #ff1a1a; }
-
-#scoreInput {
-  position: absolute;
-  top: 96px;
-  right: 16px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 1.2rem;
-  width: 120px;
-}
-#scoreInput:focus {
-  outline: none;
-  border-color: #2a47ff;
-}
-
-#submitScoreButton {
-  position: absolute;
-  top: 175px;
-  right: 16px;
-  background: #4caf50;
-}
-#submitScoreButton:hover { background: #45a049; }
-
 #LoginButton, #SignUpButton {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: #008cba;
+    position: absolute;
+    top: 56px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #008cba;
+    color: #ffffff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
 }
-#LoginButton:hover, #SignUpButton:hover { background: #007bb5; }
+#SignUpButton {
+    top: 96px;
+}
+#LoginButton:hover, #SignUpButton:hover {
+    background: #007bb5;
+}
