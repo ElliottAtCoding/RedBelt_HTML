@@ -211,6 +211,7 @@ submitScoreButton.addEventListener("click", () => {
         if (updated) {
             alert(`Your new high score of ${updated.highScore} has been set!`);
             scoreInput.value = "";
+            location.reload();
         }
     })
     .catch((error) => {
