@@ -5,13 +5,13 @@ const logoutButton = document.getElementById("logoutButton");
 const userBadge = document.getElementById('userBadge');
 const submitScoreButton = document.getElementById("submitScoreButton");
 const scoreInput = document.getElementById("scoreInput");
+const addFriendButton = document.getElementById("addFriend");
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
   const query = encodeURIComponent(JSON.stringify({ username: loginusername, password: loginpassword }));
   const usernameToCheck = loginusername;
   let userExists = false;
-  let friends = [];
   const url = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`;
     fetch(url, {
             method: 'GET',
@@ -67,6 +67,8 @@ signupButton.addEventListener("click", () => {
                 username: signUpusername,
                 password: signUppassword,
                 highScore: 0,
+                friends: []
+
             };
             return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts`, {
                 method: "POST",
@@ -219,6 +221,72 @@ submitScoreButton.addEventListener("click", () => {
         console.error("Error updating score:", error);
         alert("There was an error submitting your score. Please try again later.");
     });
+});
+addFriendButton.addEventListener("click", () => {
+  const friendToAdd = document.getElementById("friendInput").value.trim();
+  if (friendToAdd === "") return null;
+  if (friendToAdd === loggedInUser) {
+    alert("You can't add yourself as a friend");
+  const checkFriendURL = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${encodeURIComponent(JSON.stringify({ username: friendToAdd }))}`;
+    fetch(checkFriendURL, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": apiKey,
+                "cache-control": "no-cache",
+            }
+    })
+    .then(res => res.json())
+    .then(friendData => {
+    if (friendData.length === 0) {
+      alert("User not found.");
+      return;
+    }
+    const loggedInUser = localStorage.getItem("username");
+    const loggedInUserQuery = encodeURIComponent(JSON.stringify({ username: loggedInUser }));
+
+    return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${loggedInUserQuery}`, {  
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-apikey": apiKey,
+        "cache-control": "no-cache",
+      }
+    })
+    .then(res => res ? res.json() : null)
+    .then(myUserData => {
+      if (!myUserData || myUserData.length === 0) return null;
+      const me = myUserData[0];
+      const myId = me._id;
+      const currentFriends = Array.isArray(me.friends) ? me.friends : [];
+  
+      // Avoid duplicates
+      if (currentFriends.includes(friendToAdd)) {
+        alert("You already added this friend.");
+        return;
+      }
+      currentFriends.push(friendToAdd);
+      return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts/${myId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-apikey": apiKey,
+          "cache-control": "no-cache",
+        },
+        body: JSON.stringify({ friends: currentFriends })
+      });
+      });
+  })
+  .then(res => {
+    if (!res) return null;
+    if (!res.ok) throw new Error("Could not save friend list");
+    alert("Friend added!");
+    location.reload();
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error adding friend.");
+  });
 });
 logoutButton.addEventListener("click", () => {
     localStorage.removeItem("isLoggedIn");
