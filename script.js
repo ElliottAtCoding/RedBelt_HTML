@@ -11,6 +11,7 @@ Login.addEventListener("click", () => {
   const query = encodeURIComponent(JSON.stringify({ username: loginusername, password: loginpassword }));
   const usernameToCheck = loginusername;
   let userExists = false;
+  let friends = [];
   const url = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`;
     fetch(url, {
             method: 'GET',
