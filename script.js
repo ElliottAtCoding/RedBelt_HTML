@@ -6,6 +6,7 @@ const userBadge = document.getElementById('userBadge');
 const submitScoreButton = document.getElementById("submitScoreButton");
 const scoreInput = document.getElementById("scoreInput");
 const addFriendButton = document.getElementById("addFriend");
+const friendInput = document.getElementById("friendInput");
 Login.addEventListener("click", () => {
   let loginusername = prompt("What is your username?");
   let loginpassword = prompt("What is your password?");
@@ -100,36 +101,38 @@ signupButton.addEventListener("click", () => {
         console.error("Error checking username:", error);
         alert("There was an error checking the username. Please try again later.");
     });
-});
 const updateUserBadge = () => {
   if (!userBadge) return;
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
   if (isLoggedIn) {
     const storedUsername = localStorage.getItem("username");
     const query = encodeURIComponent(JSON.stringify({ username: storedUsername }));
-    fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`,
-        {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "x-apikey": apiKey,
-            "cache-control": "no-cache",
-        },
+
+    fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${query}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-apikey": apiKey,
+        "cache-control": "no-cache",
+      }
     })
     .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
-        return res.json();
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
     })
     .then((data) => {
-        if (data.length === 0) {
-            throw new Error("User not found");
-        }
-        const user = data[0];
-        const id = user._id;
-        const currentHighScore = typeof user.highScore === "number" ? user.highScore : 0;
-        localStorage.setItem("highScore", currentHighScore);
-        userBadge.textContent = `Hello, ${storedUsername}! Your current high score is ${currentHighScore}.`;
+      if (data.length === 0) throw new Error("User not found");
+
+      const user = data[0];
+      const currentHighScore = typeof user.highScore === "number" ? user.highScore : 0;
+
+      localStorage.setItem("highScore", currentHighScore);
+      userBadge.textContent = `Hello, ${storedUsername}! Your current high score is ${currentHighScore}.`;
     })
+    .catch((err) => {
+      console.error("Error updating badge:", err);
+    });
   } else {
     userBadge.textContent = "Not logged in";
   }
@@ -222,36 +225,42 @@ submitScoreButton.addEventListener("click", () => {
         alert("There was an error submitting your score. Please try again later.");
     });
 });
-addFriendButton.addEventListener("click", () => {
-  const friendToAdd = document.getElementById("friendInput").value.trim();
+addFriendButton?.addEventListener("click", () => {
+  const loggedInUser = localStorage.getItem("username");
+  if (!loggedInUser) {
+    alert("You must be logged in to add friends.");
+    return;
+  }
+  const friendToAdd = friendInput.value.trim();
   if (friendToAdd === "") return null;
   if (friendToAdd === loggedInUser) {
     alert("You can't add yourself as a friend");
+    return;
+  }
   const checkFriendURL = `https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${encodeURIComponent(JSON.stringify({ username: friendToAdd }))}`;
     fetch(checkFriendURL, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "x-apikey": apiKey,
-                "cache-control": "no-cache",
-            }
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+      "x-apikey": apiKey,
+      "cache-control": "no-cache",
+    }
     })
     .then(res => res.json())
     .then(friendData => {
     if (friendData.length === 0) {
-      alert("User not found.");
-      return;
+        alert("User not found.");
+        return null;
     }
-    const loggedInUser = localStorage.getItem("username");
     const loggedInUserQuery = encodeURIComponent(JSON.stringify({ username: loggedInUser }));
-
-    return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${loggedInUserQuery}`, {  
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-apikey": apiKey,
-        "cache-control": "no-cache",
-      }
+      return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts?q=${loggedInUserQuery}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-apikey": apiKey,
+          "cache-control": "no-cache",
+        }
+      });
     })
     .then(res => res ? res.json() : null)
     .then(myUserData => {
@@ -263,7 +272,7 @@ addFriendButton.addEventListener("click", () => {
       // Avoid duplicates
       if (currentFriends.includes(friendToAdd)) {
         alert("You already added this friend.");
-        return;
+        return null;
       }
       currentFriends.push(friendToAdd);
       return fetch(`https://hiscoretracker-67e9.restdb.io/rest/accounts/${myId}`, {
@@ -275,22 +284,22 @@ addFriendButton.addEventListener("click", () => {
         },
         body: JSON.stringify({ friends: currentFriends })
       });
-      });
-  })
-  .then(res => {
-    if (!res) return null;
-    if (!res.ok) throw new Error("Could not save friend list");
-    alert("Friend added!");
-    location.reload();
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Error adding friend.");
-  });
+      })
+    .then(res => {
+      if (!res) return null;
+      if (!res.ok) throw new Error("Could not save friend list");
+      friendInput.value = "";
+      alert("Friend added!");
+      location.reload();
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error adding friend.");
+    });
 });
 logoutButton.addEventListener("click", () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("username");
     alert("You have been logged out.");
     location.reload();
-    });
+});
