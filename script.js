@@ -146,7 +146,7 @@ const removeFriend = async (friendName) => {
             friends: updatedFriends
         });
 
-        alert("Friend removed!");
+        alert(`Friend ${friendName} removed!`);
         loadFriends();
     } catch (error) {
         console.error("Error removing friend:", error);
