@@ -92,7 +92,7 @@ const loadFriends = async () => {
 
     try {
         const query = encodeURIComponent(JSON.stringify({ username: username }));
-        const data = await dbFetch(`?q=${query}`);
+        const data = await dbFetch(`?q=${query}&h={"$fields": {"friends": 1}}`);
         
         if (data.length === 0) {
             friendTableBody.innerHTML = "";
@@ -104,7 +104,17 @@ const loadFriends = async () => {
 
         friendTableBody.innerHTML = "";
         
-        friends.forEach(friendName => {
+        for (const friend of friends) {
+            // Handle both dereferenced objects and plain IDs
+            let friendId, friendName;
+            if (typeof friend === 'object' && friend !== null) {
+                friendId = friend._id;
+                friendName = friend.username || friend._id;
+            } else {
+                friendId = friend;
+                friendName = friend; // Fallback to ID if not dereferenced
+            }
+
             const row = document.createElement("tr");
             
             const nameCell = document.createElement("td");
@@ -114,18 +124,18 @@ const loadFriends = async () => {
             const removeCell = document.createElement("td");
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
-            removeButton.addEventListener("click", () => removeFriend(friendName));
+            removeButton.addEventListener("click", () => removeFriend(friendId));
             removeCell.appendChild(removeButton);
             row.appendChild(removeCell);
             
             friendTableBody.appendChild(row);
-        });
+        }
     } catch (error) {
         console.error("Error loading friends:", error);
     }
 };
 
-const removeFriend = async (friendName) => {
+const removeFriend = async (friendId) => {
     const username = localStorage.getItem("username");
     if (!username) return;
 
@@ -137,16 +147,14 @@ const removeFriend = async (friendName) => {
 
         const me = data[0];
         const currentFriends = Array.isArray(me.friends) ? me.friends : [];
-        const updatedFriends = currentFriends.filter(f => f !== friendName);
+        // Filter out the friend by ID (handle both objects and plain IDs)
+        const updatedFriends = currentFriends
+            .map(f => (typeof f === 'object' && f !== null) ? f._id : f)
+            .filter(id => id !== friendId);
 
-        await dbFetch(`/${me._id}`, "PUT", {
-            username: me.username,
-            password: me.password,
-            highScore: me.highScore || 0,
-            friends: updatedFriends
-        });
+        await dbFetch(`/${me._id}`, "PATCH", { friends: updatedFriends });
 
-        alert(`Friend ${friendName} removed!`);
+        alert(`Friend removed!`);
         loadFriends();
     } catch (error) {
         console.error("Error removing friend:", error);
@@ -272,6 +280,9 @@ if (addFriendButton) {
             
             if (friendData.length === 0) return alert("User not found.");
 
+            const friendRecord = friendData[0];
+            const friendId = friendRecord._id;
+
             // Step 2: Get my own user data
             const myQuery = encodeURIComponent(JSON.stringify({ username: loggedInUser }));
             const myData = await dbFetch(`?q=${myQuery}`);
@@ -281,19 +292,17 @@ if (addFriendButton) {
             const me = myData[0];
             const currentFriends = Array.isArray(me.friends) ? me.friends : [];
 
-            // Step 3: Check duplicates
-            if (currentFriends.includes(friendName)) {
+            // Step 3: Check duplicates (compare by ID)
+            const friendIds = currentFriends.map(f => 
+                (typeof f === 'object' && f !== null) ? f._id : f
+            );
+            if (friendIds.includes(friendId)) {
                 return alert("You already added this friend.");
             }
 
-            // Step 4: Update friend list
-            currentFriends.push(friendName);
-            await dbFetch(`/${me._id}`, "PUT", {
-                username: me.username,
-                password: me.password,
-                highScore: me.highScore || 0,
-                friends: currentFriends
-            });
+            // Step 4: Update friend list with the friend's _id
+            const updatedFriends = [...friendIds, friendId];
+            await dbFetch(`/${me._id}`, "PATCH", { friends: updatedFriends });
             
             alert("Friend added!");
             friendInput.value = "";
