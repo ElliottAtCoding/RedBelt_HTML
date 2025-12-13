@@ -24,9 +24,23 @@ async function dbFetch(endpoint = "", method = "GET", body = null) {
     };
     if (body) options.body = JSON.stringify(body);
 
-    const response = await fetch(`${dbUrl}${endpoint}`, options);
-    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
-    return await response.json();
+    const fullUrl = `${dbUrl}${endpoint}`;
+    console.log(`[dbFetch] ${method} ${fullUrl}`, body ? { body } : '');
+    
+    const response = await fetch(fullUrl, options);
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[dbFetch] API Error: ${response.status} ${response.statusText}`, {
+            url: fullUrl,
+            method,
+            body,
+            responseBody: errorText
+        });
+        throw new Error(`API Error: ${response.status} ${response.statusText} - ${errorText}`);
+    }
+    const data = await response.json();
+    console.log(`[dbFetch] Response:`, data);
+    return data;
 }
 
 // --- UI Helper Functions ---
@@ -90,17 +104,21 @@ const loadFriends = async () => {
     const username = localStorage.getItem("username");
     if (!username) return;
 
+    console.log(`[loadFriends] Loading friends for user: ${username}`);
+
     try {
         const query = encodeURIComponent(JSON.stringify({ username: username }));
         const data = await dbFetch(`?q=${query}&h={"$fields": {"friends": 1}}`);
         
         if (data.length === 0) {
+            console.warn(`[loadFriends] No user found with username: ${username}`);
             friendTableBody.innerHTML = "";
             return;
         }
 
         const user = data[0];
         const friends = Array.isArray(user.friends) ? user.friends : [];
+        console.log(`[loadFriends] Found ${friends.length} friends:`, friends);
 
         friendTableBody.innerHTML = "";
         
@@ -110,9 +128,11 @@ const loadFriends = async () => {
             if (typeof friend === 'object' && friend !== null) {
                 friendId = friend._id;
                 friendName = friend.username || friend._id;
+                console.log(`[loadFriends] Processing dereferenced friend object:`, { friendId, friendName, raw: friend });
             } else {
                 friendId = friend;
                 friendName = friend; // Fallback to ID if not dereferenced
+                console.log(`[loadFriends] Processing friend ID (not dereferenced):`, { friendId });
             }
 
             const row = document.createElement("tr");
@@ -130,34 +150,48 @@ const loadFriends = async () => {
             
             friendTableBody.appendChild(row);
         }
+        console.log(`[loadFriends] Successfully loaded ${friends.length} friends`);
     } catch (error) {
-        console.error("Error loading friends:", error);
+        console.error(`[loadFriends] Failed to load friends for user ${username}:`, error);
     }
 };
 
 const removeFriend = async (friendId) => {
     const username = localStorage.getItem("username");
-    if (!username) return;
+    if (!username) {
+        console.warn(`[removeFriend] Cannot remove friend - no user logged in`);
+        return;
+    }
+
+    console.log(`[removeFriend] Attempting to remove friend with ID: ${friendId} for user: ${username}`);
 
     try {
         const query = encodeURIComponent(JSON.stringify({ username: username }));
         const data = await dbFetch(`?q=${query}`);
         
-        if (data.length === 0) return;
+        if (data.length === 0) {
+            console.error(`[removeFriend] User not found: ${username}`);
+            return;
+        }
 
         const me = data[0];
         const currentFriends = Array.isArray(me.friends) ? me.friends : [];
+        console.log(`[removeFriend] Current friends before removal:`, currentFriends);
+        
         // Filter out the friend by ID (handle both objects and plain IDs)
         const updatedFriends = currentFriends
             .map(f => (typeof f === 'object' && f !== null) ? f._id : f)
             .filter(id => id !== friendId);
 
+        console.log(`[removeFriend] Updated friends list (removing ${friendId}):`, updatedFriends);
+
         await dbFetch(`/${me._id}`, "PATCH", { friends: updatedFriends });
 
+        console.log(`[removeFriend] Successfully removed friend ${friendId}`);
         alert(`Friend removed!`);
         loadFriends();
     } catch (error) {
-        console.error("Error removing friend:", error);
+        console.error(`[removeFriend] Failed to remove friend ${friendId} for user ${username}:`, error);
         alert("Error removing friend.");
     }
 };
@@ -273,43 +307,62 @@ if (addFriendButton) {
         if (!friendName) return;
         if (friendName === loggedInUser) return alert("You can't add yourself.");
 
+        console.log(`[addFriend] Attempting to add friend "${friendName}" for user "${loggedInUser}"`);
+
         try {
             // Step 1: Check if friend exists in DB
+            console.log(`[addFriend] Step 1: Looking up friend "${friendName}" in database`);
             const friendQuery = encodeURIComponent(JSON.stringify({ username: friendName }));
             const friendData = await dbFetch(`?q=${friendQuery}`);
             
-            if (friendData.length === 0) return alert("User not found.");
+            if (friendData.length === 0) {
+                console.warn(`[addFriend] Friend not found: "${friendName}"`);
+                return alert("User not found.");
+            }
 
             const friendRecord = friendData[0];
             const friendId = friendRecord._id;
+            console.log(`[addFriend] Found friend:`, { username: friendName, id: friendId });
 
             // Step 2: Get my own user data
+            console.log(`[addFriend] Step 2: Fetching current user data for "${loggedInUser}"`);
             const myQuery = encodeURIComponent(JSON.stringify({ username: loggedInUser }));
             const myData = await dbFetch(`?q=${myQuery}`);
             
-            if (myData.length === 0) return; // Should not happen if logged in
+            if (myData.length === 0) {
+                console.error(`[addFriend] Current user not found in database: "${loggedInUser}"`);
+                return;
+            }
 
             const me = myData[0];
             const currentFriends = Array.isArray(me.friends) ? me.friends : [];
+            console.log(`[addFriend] Current friends list:`, currentFriends);
 
             // Step 3: Check duplicates (compare by ID)
+            console.log(`[addFriend] Step 3: Checking for duplicates`);
             const friendIds = currentFriends.map(f => 
                 (typeof f === 'object' && f !== null) ? f._id : f
             );
+            console.log(`[addFriend] Normalized friend IDs:`, friendIds);
+            
             if (friendIds.includes(friendId)) {
+                console.warn(`[addFriend] Duplicate friend detected: ${friendId}`);
                 return alert("You already added this friend.");
             }
 
             // Step 4: Update friend list with the friend's _id
             const updatedFriends = [...friendIds, friendId];
+            console.log(`[addFriend] Step 4: Updating friends list:`, updatedFriends);
+            
             await dbFetch(`/${me._id}`, "PATCH", { friends: updatedFriends });
             
+            console.log(`[addFriend] Successfully added friend "${friendName}" (${friendId})`);
             alert("Friend added!");
             friendInput.value = "";
             loadFriends();
 
         } catch (error) {
-            console.error(error);
+            console.error(`[addFriend] Failed to add friend "${friendName}" for user "${loggedInUser}":`, error);
             alert("Error adding friend.");
         }
     });
