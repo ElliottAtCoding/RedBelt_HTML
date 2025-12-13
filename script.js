@@ -66,6 +66,7 @@ const updateUIState = () => {
         if (submitScoreButton) submitScoreButton.style.display = "inline-block";
         if (scoreInput) scoreInput.style.display = "inline-block";
         updateUserBadge();
+        loadFriends();
     } else {
         if (signupButton) signupButton.style.display = "inline-block";
         if (loginButton) loginButton.style.display = "inline-block";
@@ -73,6 +74,83 @@ const updateUIState = () => {
         if (submitScoreButton) submitScoreButton.style.display = "none";
         if (scoreInput) scoreInput.style.display = "none";
         if (userBadge) userBadge.textContent = "Not logged in";
+    }
+};
+
+const loadFriends = async () => {
+    const friendTableBody = document.getElementById("friendTableBody");
+    if (!friendTableBody) return;
+
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+        friendTableBody.innerHTML = "";
+        return;
+    }
+
+    const username = localStorage.getItem("username");
+    if (!username) return;
+
+    try {
+        const query = encodeURIComponent(JSON.stringify({ username: username }));
+        const data = await dbFetch(`?q=${query}`);
+        
+        if (data.length === 0) {
+            friendTableBody.innerHTML = "";
+            return;
+        }
+
+        const user = data[0];
+        const friends = Array.isArray(user.friends) ? user.friends : [];
+
+        friendTableBody.innerHTML = "";
+        
+        friends.forEach(friendName => {
+            const row = document.createElement("tr");
+            
+            const nameCell = document.createElement("td");
+            nameCell.textContent = friendName;
+            row.appendChild(nameCell);
+            
+            const removeCell = document.createElement("td");
+            const removeButton = document.createElement("button");
+            removeButton.textContent = "Remove";
+            removeButton.addEventListener("click", () => removeFriend(friendName));
+            removeCell.appendChild(removeButton);
+            row.appendChild(removeCell);
+            
+            friendTableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error("Error loading friends:", error);
+    }
+};
+
+const removeFriend = async (friendName) => {
+    const username = localStorage.getItem("username");
+    if (!username) return;
+
+    try {
+        const query = encodeURIComponent(JSON.stringify({ username: username }));
+        const data = await dbFetch(`?q=${query}`);
+        
+        if (data.length === 0) return;
+
+        const me = data[0];
+        const currentFriends = Array.isArray(me.friends) ? me.friends : [];
+        const updatedFriends = currentFriends.filter(f => f !== friendName);
+
+        await dbFetch(`/${me._id}`, "PUT", {
+            username: me.username,
+            password: me.password,
+            highScore: me.highScore || 0,
+            friends: updatedFriends
+        });
+
+        alert("Friend removed!");
+        loadFriends();
+    } catch (error) {
+        console.error("Error removing friend:", error);
+        alert("Error removing friend.");
     }
 };
 
@@ -210,10 +288,16 @@ if (addFriendButton) {
 
             // Step 4: Update friend list
             currentFriends.push(friendName);
-            await dbFetch(`/${me._id}`, "PATCH", { friends: currentFriends });
+            await dbFetch(`/${me._id}`, "PUT", {
+                username: me.username,
+                password: me.password,
+                highScore: me.highScore || 0,
+                friends: currentFriends
+            });
             
             alert("Friend added!");
             friendInput.value = "";
+            loadFriends();
 
         } catch (error) {
             console.error(error);
