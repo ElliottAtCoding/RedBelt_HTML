@@ -108,7 +108,7 @@ const loadFriends = async () => {
 
     try {
         const query = encodeURIComponent(JSON.stringify({ username: username }));
-        const data = await dbFetch(`?q=${query}&h={"$fields": {"friends": 1}}`);
+        const data = await dbFetch(`?q=${query}&deref=friends&h={"$fields": {"friends": 1}}`);
         
         if (data.length === 0) {
             console.warn(`[loadFriends] No user found with username: ${username}`);
