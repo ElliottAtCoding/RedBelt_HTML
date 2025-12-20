@@ -87,8 +87,6 @@ table {
     border-collapse: collapse;
     margin: 20px auto;
     width: min(600px, 90%);
-    overflow-x: auto;
-    display: block;
 }
 
 table th,
@@ -185,10 +183,9 @@ table th {
         top: 256px;
     }
 
-    /* Main content area */
+    /* Main content area - max-width calculation: 100% - (sidebar width 180px + right padding 20px + left margin 20px + additional spacing 40px) */
     table {
         margin: 20px;
         max-width: calc(100% - 260px);
-        display: table;
     }
 }
