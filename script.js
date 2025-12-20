@@ -203,7 +203,7 @@ const removeFriend = async (friendId) => {
 
         console.log(`[removeFriend] Successfully removed friend ${friendId}`);
         alert(`Friend removed!`);
-        loadFriends();
+        location.reload();
     } catch (error) {
         console.error(`[removeFriend] Failed to remove friend ${friendId} for user ${username}:`, error);
         alert("Error removing friend.");
@@ -227,8 +227,7 @@ if (loginButton) {
                 alert("Login successful!");
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('username', username);
-                updateUIState();
-                // Optional: location.reload() if you really need to refresh
+                location.reload();
             } else {
                 alert("Incorrect username or password");
             }
@@ -268,7 +267,7 @@ if (signupButton) {
             alert("Account created successfully!");
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('username', username);
-            updateUIState();
+            location.reload();
 
         } catch (error) {
             console.error("Signup Error:", error);
@@ -298,8 +297,7 @@ if (submitScoreButton) {
             if (score > currentHighScore) {
                 await dbFetch(`/${user._id}`, "PATCH", { highScore: score });
                 alert(`New High Score: ${score}!`);
-                scoreInput.value = "";
-                updateUserBadge(); // Update badge immediately without reload
+                location.reload();
             } else {
                 alert(`Score ${score} is not higher than your best (${currentHighScore}).`);
                 scoreInput.value = "";
@@ -372,8 +370,7 @@ if (addFriendButton) {
             
             console.log(`[addFriend] Successfully added friend "${friendName}" (${friendId})`);
             alert("Friend added!");
-            friendInput.value = "";
-            loadFriends();
+            location.reload();
 
         } catch (error) {
             console.error(`[addFriend] Failed to add friend "${friendName}" for user "${loggedInUser}":`, error);
@@ -388,8 +385,7 @@ if (logoutButton) {
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("username");
         alert("You have been logged out.");
-        updateUIState();
-        // location.reload(); // clear page state if needed
+        location.reload();
     });
 }
 
