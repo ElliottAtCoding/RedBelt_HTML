@@ -118,3 +118,21 @@ textarea {
         top: 220px;
     }
 }
+
+table {
+    border-collapse: collapse;
+    margin: 20px auto;
+    width: min(600px, 90%);
+}
+
+table th,
+table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
