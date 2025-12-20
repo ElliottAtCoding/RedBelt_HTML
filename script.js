@@ -108,7 +108,7 @@ const loadFriends = async () => {
 
     try {
         const query = encodeURIComponent(JSON.stringify({ username: username }));
-        const data = await dbFetch(`?q=${query}&h={"$fields": {"friends": 1}}`);
+        const data = await dbFetch(`?q=${query}&deref=friends&h={"$fields": {"friends": 1}}`);
         
         if (data.length === 0) {
             console.warn(`[loadFriends] No user found with username: ${username}`);
@@ -124,15 +124,25 @@ const loadFriends = async () => {
         
         for (const friend of friends) {
             // Handle both dereferenced objects and plain IDs
-            let friendId, friendName;
+            let friendId, friendName, friendHighScore;
             if (typeof friend === 'object' && friend !== null) {
                 friendId = friend._id;
                 friendName = friend.username || friend._id;
-                console.log(`[loadFriends] Processing dereferenced friend object:`, { friendId, friendName, raw: friend });
+                friendHighScore = friend.highScore || 0;
+                console.log(`[loadFriends] Processing dereferenced friend object:`, { friendId, friendName, friendHighScore, raw: friend });
             } else {
                 friendId = friend;
-                friendName = friend; // Fallback to ID if not dereferenced
-                console.log(`[loadFriends] Processing friend ID (not dereferenced):`, { friendId });
+                // Need to fetch friend details to get username and high score
+                try {
+                    const friendData = await dbFetch(`/${friendId}`);
+                    friendName = friendData.username || friendId;
+                    friendHighScore = friendData.highScore || 0;
+                    console.log(`[loadFriends] Fetched friend details:`, { friendId, friendName, friendHighScore });
+                } catch (err) {
+                    console.error(`[loadFriends] Failed to fetch details for friend ${friendId}:`, err);
+                    friendName = friendId; // Fallback to ID if fetch fails
+                    friendHighScore = 0;
+                }
             }
 
             const row = document.createElement("tr");
@@ -140,6 +150,10 @@ const loadFriends = async () => {
             const nameCell = document.createElement("td");
             nameCell.textContent = friendName;
             row.appendChild(nameCell);
+            
+            const scoreCell = document.createElement("td");
+            scoreCell.textContent = friendHighScore;
+            row.appendChild(scoreCell);
             
             const removeCell = document.createElement("td");
             const removeButton = document.createElement("button");
