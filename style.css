@@ -148,7 +148,7 @@ table th {
         position: absolute;
         top: 16px;
         right: 20px;
-        width: 180px;
+        width: 325px;
         margin: 0;
     }
 
@@ -158,7 +158,7 @@ table th {
     #submitScoreButton,
     #scoreInput {
         position: absolute;
-        width: 325px;
+        width: 175px;
         right: 20px;
         margin: 0;
     }
