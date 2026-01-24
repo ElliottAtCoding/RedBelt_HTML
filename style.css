@@ -124,6 +124,12 @@ table th {
         width: min(320px, 90%);
         margin: 12px auto;
     }
+    
+    /* Optimize badge for logged-in text */
+    .user-badge {
+        font-size: 0.95rem;
+        padding: 8px 12px;
+    }
 
     /* Add more space for table */
     table {
@@ -149,8 +155,10 @@ table th {
         position: absolute;
         top: 16px;
         right: 20px;
-        width: 325px;
+        width: 180px;
         margin: 0;
+        font-size: 0.9rem;
+        padding: 8px 12px;
     }
 
     #LoginButton,
@@ -165,15 +173,15 @@ table th {
     }
 
     #LoginButton {
-        top: 64px;
+        top: 80px;
     }
 
     #SignUpButton {
-        top: 112px;
+        top: 128px;
     }
 
     #logoutButton {
-        top: 80px;
+        top: 96px;
     }
 
     #scoreInput {
