@@ -107,10 +107,11 @@ table th {
         padding-right: 0;
     }
 
+    /* Keep h1 centered for consistency with other elements */
     h1 {
-        text-align: left;
-        margin-left: 20px;
-        padding: 0;
+        text-align: center;
+        margin: 16px auto 24px;
+        padding: 0 16px;
     }
 
     /* Keep vertical stacking but improve spacing */
@@ -126,7 +127,7 @@ table th {
 
     /* Add more space for table */
     table {
-        margin: 20px;
+        margin: 20px auto;
         max-width: calc(100% - 40px);
     }
 }
