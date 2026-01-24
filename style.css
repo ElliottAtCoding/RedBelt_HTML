@@ -124,6 +124,12 @@ table th {
         width: min(320px, 90%);
         margin: 12px auto;
     }
+    
+    /* Optimize badge for logged-in text */
+    .user-badge {
+        font-size: 0.95rem;
+        padding: 8px 12px;
+    }
 
     /* Add more space for table */
     table {
