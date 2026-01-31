@@ -123,8 +123,6 @@ table th {
     #scoreInput {
         width: min(320px, 90%);
         margin: 12px auto;
-        margin-left: auto;
-        margin-right: auto;
     }
     
     /* Optimize badge for logged-in text */
