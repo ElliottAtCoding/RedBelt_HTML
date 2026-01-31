@@ -118,7 +118,7 @@ const loadFriends = async () => {
 
         const user = data[0];
         const friends = Array.isArray(user.friends) ? user.friends : [];
-        friends.push (username);
+        friends.push (user);
         console.log(`[loadFriends] Found ${friends.length} friends:`, friends);
 
         friendTableBody.innerHTML = "";
