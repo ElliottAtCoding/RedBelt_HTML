@@ -92,7 +92,7 @@ const updateUIState = () => {
 };
 
 const loadFriends = async () => {
-    const friendBody = document.getElementById("friendTableBody");
+    const friendTableBody = document.getElementById("friendTableBody");
     if (!friendTableBody) return;
 
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -118,7 +118,6 @@ const loadFriends = async () => {
 
         const user = data[0];
         const friends = Array.isArray(user.friends) ? user.friends : [];
-        friends.push (username);
         console.log(`[loadFriends] Found ${friends.length} friends:`, friends);
 
         friendTableBody.innerHTML = "";
@@ -145,7 +144,7 @@ const loadFriends = async () => {
                     friendHighScore = 0;
                 }
             }
-        
+
             const row = document.createElement("tr");
             
             const nameCell = document.createElement("td");
