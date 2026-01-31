@@ -92,8 +92,6 @@ const updateUIState = () => {
 };
 
 const loadFriends = async () => {
-    const username = localStorage.getItem("username");
-    const UserObject = {_id = -1,username=username,highscore=localStorage.getItem("highScore")};
     const friendBody = document.getElementById("friendTableBody");
     if (!friendTableBody) return;
 
@@ -102,6 +100,8 @@ const loadFriends = async () => {
         friendTableBody.innerHTML = "";
         return;
     }
+
+    const username = localStorage.getItem("username");
     if (!username) return;
 
     console.log(`[loadFriends] Loading friends for user: ${username}`);
@@ -118,7 +118,7 @@ const loadFriends = async () => {
 
         const user = data[0];
         const friends = Array.isArray(user.friends) ? user.friends : [];
-        friends.push (UserObject);
+        friends.push (user);
         console.log(`[loadFriends] Found ${friends.length} friends:`, friends);
 
         friendTableBody.innerHTML = "";
