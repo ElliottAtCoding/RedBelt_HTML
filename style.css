@@ -39,12 +39,9 @@ textarea {
 #logoutButton,
 #submitScoreButton,
 #scoreInput {
-    display: flex;
     width: min(320px, 90%);
     margin: 12px auto;
     padding: 10px 16px;
-    justify-items: center;
-    align-items: center;
 }
 
 #LoginButton,
@@ -101,6 +98,11 @@ table td {
 table th {
     background-color: #f0f0f0;
     font-weight: bold;
+}
+.container {
+    display: flex;
+    justify-items: center;
+    align-items: center;
 }
 
 /* Tablet breakpoint - transition layout */
