@@ -76,9 +76,9 @@ const updateUIState = () => {
     if (isLoggedIn) {
         if (signupButton) signupButton.style.display = "none";
         if (loginButton) loginButton.style.display = "none";
-        if (logoutButton) logoutButton.style.display = "inline-block";
-        if (submitScoreButton) submitScoreButton.style.display = "inline-block";
-        if (scoreInput) scoreInput.style.display = "inline-block";
+        if (logoutButton) logoutButton.style.display = "block";
+        if (submitScoreButton) submitScoreButton.style.display = "block";
+        if (scoreInput) scoreInput.style.display = "block";
         updateUserBadge();
         loadFriends();
     } else {
