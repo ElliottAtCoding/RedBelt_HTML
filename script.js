@@ -7,9 +7,9 @@ const dbUrl = "https://hiscoretracker-67e9.restdb.io/rest/accounts";
 // This listener prevents "Unchecked runtime.lastError" console errors
 if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        // Acknowledge the message to prevent "receiving end does not exist" errors
-        sendResponse({});
-        return false; // Indicates response is sent synchronously
+        // Silently ignore extension messages - don't respond
+        // This prevents "receiving end does not exist" errors without interfering
+        return false;
     });
 }
 
