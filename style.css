@@ -47,6 +47,7 @@ textarea {
     width: min(320px, 90%);
     margin: 12px auto;
     flex-basis: 100%;
+    height: 50px;
 }
 
 #LoginButton,
