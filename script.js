@@ -2,6 +2,17 @@
 const apiKey = "68ea8f1c7f34ed3b0c200aaa";
 const dbUrl = "https://hiscoretracker-67e9.restdb.io/rest/accounts";
 
+// --- Handle browser extension messages to prevent runtime errors ---
+// Some browser extensions try to communicate with web pages
+// This listener prevents "Unchecked runtime.lastError" console errors
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        // Acknowledge the message to prevent "receiving end does not exist" errors
+        sendResponse({});
+        return false; // Indicates response is sent synchronously
+    });
+}
+
 // --- DOM Elements ---
 const loginButton = document.getElementById("LoginButton");
 const signupButton = document.getElementById("SignUpButton");
