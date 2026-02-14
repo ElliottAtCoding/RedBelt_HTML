@@ -108,6 +108,7 @@ table th {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-direction: column;
 }
 
 /* Tablet breakpoint - transition layout */
