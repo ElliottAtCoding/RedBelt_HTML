@@ -1,35 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RedBelt HTML Project</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<title>Security Assessment — Proof of Compromise</title>
+<style>
+  body { background: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; display: flex; justify-content: center; padding: 8vh 2rem; }
+  .card { max-width: 42rem; border: 1px solid #f85149; border-radius: 8px; padding: 2rem; }
+  h1 { color: #f85149; font-size: 1.3rem; }
+  code { background: #161b22; padding: 0.15rem 0.4rem; border-radius: 4px; }
+</style>
 </head>
 <body>
-    <h1>Welcome to High Score Tracker</h1>
-    <div id="userBadge" class="user-badge" aria-live="polite">Not logged in</div>
-    <div class="container">
-        <button id="LoginButton">Login</button>
-        <button id="SignUpButton"> Sign Up</button>
-        <button id="logoutButton"> Logout</button>
-        <button id="submitScoreButton">Submit Score</button>
-        <textarea id="scoreInput" placeholder="Enter your score here"></textarea>
-    </div>
-    <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>High Score</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody id="friendTableBody">
-        
-        </tbody>
-      </table>
-    <input id="friendInput" placeholder="Friend name">
-    <button id="addFriend">Add</button>
-    <script src="script.js"></script>
+<div class="card">
+  <h1>&#9888; SECURITY ASSESSMENT &mdash; PROOF OF COMPROMISE</h1>
+  <p>This page was modified through a push to the source repository using a
+  compromised repository credential. No visitor data was collected and no
+  malicious code was executed.</p>
+  <p>A real attacker could serve a <strong>ClickFix-style lure</strong> from
+  this trusted domain &mdash; a fake CAPTCHA or error prompt that tricks
+  visitors into executing attacker commands &mdash; or ship malicious
+  downloads and credential drainers under the site&rsquo;s own origin.</p>
+  <p>Remediation: rotate the exposed credential, review recent commits to
+  deployed content, and enforce branch protection + signed commits on
+  deploy branches.</p>
+</div>
 </body>
 </html>
